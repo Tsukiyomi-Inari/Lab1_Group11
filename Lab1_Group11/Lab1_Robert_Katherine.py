@@ -12,6 +12,7 @@ card_number = []
 check_digit = ""
 DIVIDE_BY = 10
 GREATER_THAN = 9
+MAX_DIGITS = 16
 
 system("cls")
 system("Lab 1: Credit Card Validator - Group 11")
