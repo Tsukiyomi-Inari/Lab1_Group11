@@ -5,111 +5,84 @@
 #   @Project Name: Credit Card Number Validator
 #   @Project Description:   A program that validates credit card numbers with Luhn Algorithm
 #
+
 from os import system
+from colorama import Fore
 
-import colorama
+system("title Lab 1 - Robert & Katherine")
 
-card_number = []
-check_digit = ""
-DIVIDE_BY = 10
-GREATER_THAN = 9
-MAX_DIGITS = 16
+# Functions
+def card_validator(card_number):
+    # Creates a list of numbers from input
+    def card_digits(input):
+        return [int(digits) for digits in str(input)]
+    numbers = card_digits(card_number)
+    # Puts odd and even numbers in their own variables
+    odd_numbers = numbers[-1::-2]
+    even_numbers = numbers[-2::-2]
+    # Creates a total using the sum of odd numbers and the sum of even numbers * 2
+    # and returns the remainder of that total divided by 10
+    total = 0
+    total += sum(odd_numbers)
+    for digits in even_numbers:
+        total += sum(card_digits(digits*2))
+    return total % 10
 
-def stringToList(input):
-    """
-    Takes a string, trims any white space then
-    for each digit, is then appended into the empty list
-    "check digit"
-    :rtype: string
-    :return:
-        a list of numeric items
-    """
+def create_banner():
+    banner = "==========================\n" + "= Card Number Validation =\n" + "==========================\n"
+    return banner
 
-    # loop through each digit assigning them to individual index's
-    for count in input:
-        card_number.append(count)
-
-def validInputCheck(input):
-    """
-    takes input and will only allow
-    program to continue with valid input
-     it checks for:
-     1. Null entry
-     2. Non numeric characters
-     3. Length exceeding 16
-     if invalid, error message will be printed to
-     the console and user will be promped again
-    :return:
-    True when valid
-    False when in-valid
-    """
-
-    if input == " " :
-        print(colorama.Fore.RED + "\nError: input can not be empty\n" + colorama.Fore.RESET)
-        system("cls")
-        return False
-
-    elif input.isalpha() == True or input.isnumeric() == False:
-        print(colorama.Fore.RED + f"\nError: input must consist of only numbers\n" + colorama.Fore.RESET)
-        system("cls")
-        return False
-
-    elif (len(input) > MAX_DIGITS):
-        print(colorama.Fore.RED + f"\nError: input can not be more then {MAX_DIGITS}\n" + colorama.Fore.RESET)
-        system("cls")
-        return False
-
-    else:
-        return True
-
-def when_even_index(card_number):
-    """
-    takes card_number list and finds each even index
-    multiplies it by 9 (via constant)
-        then if the result is greater than 9
-            subtracts the value of 9 from it
-    the final result is then inputted into a new list
-        """
-    # double every value at even intervals, if any result is greater than 9, subtract 9 from it(the doubled value)
-    even_element = []
-    for index in card_number:
-        # multiply each EVEN index by 9 and add to new list
-        even_element = index[-2::2] * GREATER_THAN
-        if even_element[index] > GREATER_THAN:
-            even_element[index] = even_element[index] - GREATER_THAN
+def validate_input(input):
+    MAX_LEN = 16
+    # Checks if input is blank
+    if input != "":
+        # Checks if input is numeric
+        if input.isnumeric():
+            # Checks if input is above MAX_LEN
+            if len(input) <= MAX_LEN:
+                # Checks is card_validator returns a non-zero value
+                if card_validator(input) == 0:
+                    valid = "a valid"
+                    return valid
+                else:
+                    valid = "not a valid"
+                    return valid
+            else:
+                error = "Error - Card number can't be more than 16 digits.\n"
+                return error
         else:
-            pass
+            error = "Error - Card number must be numeric.\n"
+            return error    
+    else:
+        error = "Error - Please enter a card number.\n"
+        return error
+# End of Functions
 
 
-system("cls")
-system("Lab 1: Credit Card Validator - Group 11")
-# accept card number as string with/out spaces  from user
+# Main code block
 
-input = input("Please enter a credit card number:").strip()
+# Repeatable program loop
+repeat = True
+while repeat:
+    system("cls")
+    print(create_banner())
 
+    # If input is non-numeric, blank, or over 16 digits requests input again.
+    output_message = ""
+    while output_message != "a valid" and output_message != "not a valid":
+        card_number = input("Please input a card number: ").strip()
+        output_message = validate_input(card_number)
+        if output_message != "a valid" and output_message != "not a valid":
+            print(output_message)
+            system("pause")
+            system("cls")
+            print(create_banner())
 
-#Call validation function
-validInputCheck(input)
+    # Clears system and outputs message based on entered card number
+    system("cls")
+    print(create_banner())
+    print(f"Entered Card Number: {card_number}\n")
+    print(f"{card_number} is {output_message} card number.")
 
-
-# Call function to convert the validated string to input each digit into separate indexe's in list
-stringToList(input)
-
-# remove rightmost digit(checking digit) from input number, excluding it from calculations
-check_digit = card_number[-1]
-del card_number[-1]
-
-# Reverse the order of remaining input
-card_number.reverse()
-
-when_even_index(card_number)
-# Add together all the results (values) and re-add checking digit
-
-
-# If divisible by 10, it is valid. Where it can not be divided by 10, the card number is invalid
-
-# Test card numbers:
-# mastercard             5105105105105100
-# Union pay              6200000000000005
-# FAKE                   4242424242424241
-# mastercard(2 series)   2223003122003222
+    repeat = input("\nPress [y] to repeat: ") == "y"
+# End of main code block
