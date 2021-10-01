@@ -7,7 +7,6 @@
 #
 
 from os import system
-from colorama import Fore
 
 system("title Lab 1 - Robert & Katherine")
 
