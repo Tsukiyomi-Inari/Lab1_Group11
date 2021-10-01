@@ -13,11 +13,15 @@ system("title Lab 1 - Robert & Katherine")
 
 # Functions
 def card_validator(card_number):
+    # Creates a list of numbers from input
     def card_digits(input):
         return [int(digits) for digits in str(input)]
     numbers = card_digits(card_number)
+    # Puts odd and even numbers in their own variables
     odd_numbers = numbers[-1::-2]
     even_numbers = numbers[-2::-2]
+    # Creates a total using the sum of odd numbers and the sum of even numbers * 2
+    # and returns the remainder of that total divided by 10
     total = 0
     total += sum(odd_numbers)
     for digits in even_numbers:
@@ -30,14 +34,18 @@ def create_banner():
 
 def validate_input(input):
     MAX_LEN = 16
+    # Checks if input is blank
     if input != "":
+        # Checks if input is numeric
         if input.isnumeric():
+            # Checks if input is above MAX_LEN
             if len(input) <= MAX_LEN:
+                # Checks is card_validator returns a non-zero value
                 if card_validator(input) == 0:
-                    valid = "Entered card number is valid."
+                    valid = "a valid"
                     return valid
                 else:
-                    valid = "Entered card number is not valid."
+                    valid = "not a valid"
                     return valid
             else:
                 error = "Error - Card number can't be more than 16 digits.\n"
@@ -52,19 +60,29 @@ def validate_input(input):
 
 
 # Main code block
+
+# Repeatable program loop
 repeat = True
 while repeat:
     system("cls")
     print(create_banner())
 
+    # If input is non-numeric, blank, or over 16 digits requests input again.
     output_message = ""
-    while output_message != "Entered card number is valid." and output_message != "Entered card number is not valid.":
+    while output_message != "a valid" and output_message != "not a valid":
         card_number = input("Please input a card number: ").strip()
         output_message = validate_input(card_number)
-        if output_message != "Entered card number is valid." and output_message != "Entered card number is not valid.":
+        if output_message != "a valid" and output_message != "not a valid":
             print(output_message)
+            system("pause")
+            system("cls")
+            print(create_banner())
 
-    print(output_message)
+    # Clears system and outputs message based on entered card number
+    system("cls")
+    print(create_banner())
+    print(f"Entered Card Number: {card_number}\n")
+    print(f"{card_number} is {output_message} card number.")
 
     repeat = input("\nPress [y] to repeat: ") == "y"
 # End of main code block
